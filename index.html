@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <title></title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width">
+      
+    </head>
+    <body>
+        <!--[if lt IE 7]>
+            <p class="chromeframe">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> or <a href="http://www.google.com/chromeframe/?redirect=true">activate Google Chrome Frame</a> to improve your experience.</p>
+        <![endif]-->
+
+       
+            <div id="script_page" style="height:1000px;width:600px;border:black solid 1px;">
+            
+            </div>
+       
+
+<script id="charlist" type="text/html">
+              
+                {{#char_found}}
+            <select name="character_name">     
+                    {{>clist}}
+            </select>   
+                    or add new character:
+                {{/char_found}}
+            
+            {{^characters}}
+            Add new character:
+            {{/characters}}
+            
+             <input name="n_character_name" type="text" />
+             <textarea name="dialogue"></textarea>
+            <button class='addCharacter'>Add Character </button>
+            </script>
+
+    <script id="clist" type="text/html">
+             
+                {{#characters}}
+                    <option value="{{.}}">{{.}}</option>
+                {{/characters}}
+                 
+        </script>
+
+        <script id="slugform" type="text/html">
+
+        <select name = "location">
+                <option value="EXT.">EXT.</option>
+                <option value="INT.">INT.</option>
+            </select>   
+            <select name = "time">
+                <option value="DAY">DAY</option>
+                <option value="NIGHT">NIGHT</option>
+            </select>
+            {{#places}}
+                <select name="slug">
+                    {{>slugs}}
+                </select>
+            {{/places}}
+            or add a new location: <input type="text" name="new_slug" />
+
+        </script>
+
+        <script id="previous_slugs" type="text/html">
+            {{#places}}
+                    <option value="{{.}}">{{.}}</option>
+                {{/places}}
+        </script>
+
+        <div id="action" style="display:none;">
+        	<textarea name="text"></textarea>
+            <button class="addAction">Submit</button>
+        </div>
+
+        <div id="character" style="display:none;"></div>
+
+        
+
+        <form id="slug" style="display:none;">
+        	
+
+        </form>	
+      
+       <script src="jquery-1.10.2.js"></script>
+       <script src="mustache.js"></script>
+       <script src="script.js"></script>
+    </body>
+</html>
