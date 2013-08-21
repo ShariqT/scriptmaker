@@ -9,43 +9,64 @@
         <title></title>
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width">
-      
+        <link href="css/bootstrap.min.css" rel="stylesheet" />
+        <link href="css/main.css" rel="stylesheet" />
     </head>
     <body>
         <!--[if lt IE 7]>
             <p class="chromeframe">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> or <a href="http://www.google.com/chromeframe/?redirect=true">activate Google Chrome Frame</a> to improve your experience.</p>
         <![endif]-->
 
-       
-            <div id="script_page" style="height:1000px;width:600px;border:black solid 1px;">
-            
+        <div class="container">
+            <div class="row">
+                <div class="span12"><h1>Film Script</h1></div>
             </div>
-       
+            <div class="row">
+                <div class="span4">
+                        <ul>
+                            <li>sdfsdfsdfsd</li>
+                        </ul>    
+                </div>
+                <div class="span8 page">
+                    <span class='page-number'>1</span>
+                    <div id="script_page"></div>
+                </div>
+            </div>
+            
+        </div>
+   
 
-<script id="charlist" type="text/html">
-              
+        <script id="charlist" type="text/html">
+                      
                 {{#char_found}}
             <select name="character_name">     
                     {{>clist}}
-            </select>   
-                    or add new character:
+            </select>
+              <br />
+             -- or add new character:<br />
                 {{/char_found}}
             
             {{^characters}}
-            Add new character:
+            -- Add new character:<br />
             {{/characters}}
             
              <input name="n_character_name" type="text" />
-             <textarea name="dialogue"></textarea>
-            <button class='addCharacter'>Add Character </button>
-            </script>
+             <br />
+             Aside:<br />
+             <input type='text' name='aside' /><br />
+             Dialogue:<br />
+             <textarea name="dialogue" rows="8"></textarea>
+             <br />
+            <button class='addCharacter btn btn-large btn-primary'>Add Character </button>
+            
+        </script>
 
-    <script id="clist" type="text/html">
+        <script id="clist" type="text/html">
+         
+            {{#characters}}
+                <option value="{{.}}">{{.}}</option>
+            {{/characters}}
              
-                {{#characters}}
-                    <option value="{{.}}">{{.}}</option>
-                {{/characters}}
-                 
         </script>
 
         <script id="slugform" type="text/html">
@@ -57,37 +78,55 @@
             <select name = "time">
                 <option value="DAY">DAY</option>
                 <option value="NIGHT">NIGHT</option>
-            </select>
-            {{#places}}
+            </select><br />
+            {{#slugs_found}}
                 <select name="slug">
-                    {{>slugs}}
+                    {{>slist}}
                 </select>
-            {{/places}}
+            {{/slugs_found}}<br />
             or add a new location: <input type="text" name="new_slug" />
-
+            <br />
+            <button class='addSlug btn btn-large btn-primary'>Add Location</button>
         </script>
 
         <script id="previous_slugs" type="text/html">
-            {{#places}}
+            {{#slugs}}
                     <option value="{{.}}">{{.}}</option>
-                {{/places}}
+                {{/slugs}}
         </script>
 
-        <div id="action" style="display:none;">
-        	<textarea name="text"></textarea>
-            <button class="addAction">Submit</button>
+        <div id="action" class="modal hide fade" role="dialog">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                <h3 id="myModalLabel">Add Action</h3>
+            </div>
+           <div class="modal-body">
+                <textarea name="text" rows="8"></textarea>
+                <button class="addAction">Submit</button>
+           </div>
+        	
         </div>
 
-        <div id="character" style="display:none;"></div>
+        <div id="character" class="modal hide fade">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                <h3>Add A Character</h3>
+            </div>
+            <div class="modal-body">
+            </div>
+        </div>
 
-        
-
-        <form id="slug" style="display:none;">
-        	
-
-        </form>	
+        <div id="slug" class="modal hide fade">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                <h3>Add A Slug</h3>
+            </div>
+            <div class="modal-body">
+            </div>
+        </div>	
       
        <script src="jquery-1.10.2.js"></script>
+       <script src="js/bootstrap.js"></script>
        <script src="mustache.js"></script>
        <script src="script.js"></script>
     </body>

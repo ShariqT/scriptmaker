@@ -1,0 +1,62 @@
+.page{
+	height:1000px;
+	background-color:white;
+	-moz-box-shadow:    3px 3px 2px 6px #ccc;
+  	-webkit-box-shadow: 3px 3px 2px 6px #ccc;
+  	box-shadow:         3px 3px 2px 6px #ccc;
+  	margin-bottom:40px;
+
+}
+
+
+.page-number{
+	position: relative;
+left: 90%;
+text-align: rigth;
+text-align: right;
+}
+#script_page{
+	padding:20px;
+}
+
+body{
+	background-color:#D2EDFE;
+	color:black;
+}
+
+textarea[name=dialogue], textarea[name=text]{
+	width:500px;
+}
+
+
+.slugline{
+	margin-bottom: 20px;
+}
+
+.action{
+	margin-bottom:50px;
+}
+
+.character{
+	margin-bottom:50px;
+}
+.character p{
+	margin-top:-10px;
+}
+.character .dialog{
+	width: 300px;
+text-align: left;
+position: relative;
+left: 25%;
+}
+
+.character .name{
+position: relative;
+left: 35%;
+}
+
+.character .aside{
+	position: relative;
+	left:30%;
+	width:100px;
+}

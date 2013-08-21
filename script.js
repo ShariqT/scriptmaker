@@ -1,9 +1,11 @@
-var Page = {
+var Script = {
 	content: '',
 	$el: $('#script_page'),
+	editable_stage: false,
+	pages: [],
 
 	showActionForm: function(){
-		$('#action').show();
+		$('#action').modal('show');
 	},
 
 	showDialogueForm: function(){
@@ -16,7 +18,8 @@ var Page = {
 		];
 		
 		var output = Mustache.render($('#charlist').html(), {char_found: true,characters:data}, {clist: $('#clist').html()});
-		$('#character').html(output).show();
+		$('#character .modal-body').html(output);
+		$('#character').modal('show');
 	},
 
 	showSlugForm: function(){
@@ -28,13 +31,34 @@ var Page = {
 			'Galliee'
 		];
 
-		Mustache.render($('#slugform').html(), {slugs: data}, {slugs: $('#previous_slugs').html()});
-		$('#slug').show();
+		var output = Mustache.render($('#slugform').html(), {slugs_found: true, slugs:data}, {slist: $('#previous_slugs').html()});
+		$('#slug .modal-body').html(output);
+		$('#slug').modal('show');
+	},
+
+	atTheEndofPage: function(){
+		if(this.$el.height() > 900){
+			return true;
+		}else{
+			return false;
+		}
+	},
+
+	addNewPage: function(content){
+		this.pages.push(this.$el.html());
+		console.log(this.pages);
+		$('.page-number').html(this.pages.length + 1);
+		this.$el.html('');
+		this.$el.html(content);
 	},
 
 	addContentToPage: function(content){
-		var html = this.$el.html();
-		this.$el.html(html + content);
+		if(!this.atTheEndofPage()){
+			var html = this.$el.html();
+			this.$el.html(html + content);
+		}else{
+			this.addNewPage(content);
+		}
 	}
 };
 
@@ -71,11 +95,12 @@ Action.prototype = new ScriptElement();
 
 Action.prototype.clear = function(){
 	$('textarea[name=text]').val('');
-
+	$('#action').modal('hide');
 }
 
 
 var Slug = function(){
+
 	this.location;
 	this.time_of_scene;
 	this.slug;
@@ -89,10 +114,10 @@ Slug.prototype.getText = function(){
 	//we need many different things to form an accurate slug
 	this.location = $('select[name=location]').val();
 	this.time_of_scene = $('select[name=time]').val();
-	if( $('select[name=slug]').val() !== 'Choose A Location'){
-		this.slug = $('select[name=slug]').val();
+	if( $('select[name=slug]').val() != 'Choose A Location'){
+		this.slug = $('select[name=slug]').val().toUpperCase();
 	}else{
-		this.slug = $('select[name=new_slug]').val();
+		this.slug = $('input[name=new_slug]').val().toUpperCase();
 	}
 
 	return this;
@@ -108,6 +133,8 @@ Slug.prototype.clear = function(){
 	$('select[name=time]').val('');
 	$('select[name=slug]').val('Choose A Location');
 	$('select[name=new_slug]').val();
+	$('#slug').modal('hide');
+
 }
 
 var Character = function(){
@@ -119,21 +146,25 @@ var Character = function(){
 		this.is_select = false;
 	}
 
-	this.template = "<div class='character'><p>{{character}}</p><p class='dialog'>{{dialogue}}</p></div>";
+	this.template = "<div class='character'><p class='name'>{{character}}{{#aside}}<p class='aside'>({{aside}})</p>{{/aside}}</p><p class='dialog'>{{dialogue}}</p></div>";
 	this.dialogue;
+	this.aside;
+	
 }
 
 Character.prototype = new ScriptElement();
 
 Character.prototype.getText = function(){
-	this.text = this.$formValue.val();
+	this.text = this.$formValue.val().toUpperCase();
 	this.dialogue = $('textarea[name=dialogue]').val();
+	this.aside = $('input[name=aside]').val().toLowerCase();
 	return this;
 }
 
 
 Character.prototype.render = function(){
-	return Mustache.render(this.template, {character: this.text, dialogue: this.dialogue});
+	console.log(this.data);
+	return Mustache.render(this.template, {character: this.text, dialogue: this.dialogue, aside: this.aside});
 }
 
 Character.prototype.clear = function(){
@@ -143,10 +174,30 @@ Character.prototype.clear = function(){
 		this.$formValue.val('');
 	}
 	$('textarea[name=dialogue]').val('');
+	$('input[name=aside]').val();
+	$('#character').modal('hide');
 }
 
-var page = Page;
+
+
+
+
+
+
+var script = Script;
 var keys = [];
+$('#action').modal({
+	show: false
+});
+
+$('#character').modal({
+	show: false
+});
+
+$('#slug').modal({
+	show: false
+});
+
 $('body').on('keydown', function(evt){
 	keys.push(evt.which);
 	var last_two_keys = keys.slice(-2).toString();
@@ -156,19 +207,26 @@ $('body').on('keydown', function(evt){
 	}
 
 	if( last_two_keys == '18,65'){
-		page.showActionForm();
+		script.showActionForm();
 	}
 
 	if(last_two_keys == '18,67'){
-		page.showDialogueForm();
+		script.showDialogueForm();
 	}
+
+	if(last_two_keys == '18,83'){
+		script.showSlugForm();
+	}
+
+
+	
 });
 
 $('body').on('click', '.addAction', function(event){
 	var action = new Action();
 	var new_content = action.getText().render();
 	action.clear();
-	page.addContentToPage(new_content);
+	script.addContentToPage(new_content);
 
 });
 
@@ -176,11 +234,21 @@ $('body').on('click', '.addCharacter', function(event){
 	var character = new Character();
 	var new_content = character.getText().render();
 	character.clear();
-	page.addContentToPage(new_content);
+	script.addContentToPage(new_content);
 
 });
 
+$('body').on('click', '.addSlug', function(event){
+	var slug = new Slug();
+	var new_content = slug.getText().render();
+	slug.clear();
+	script.addContentToPage(new_content);
+});
+
+
+
+
 var script_page = document.getElementById('script_page');
-script_page.contentEditable = true;
+//script_page.contentEditable = true;
 
 
